@@ -31,14 +31,18 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@android:color/darker_gray"
             fab:fab_title="Creds"
-            android:id="@+id/creds">
+            android:src="@drawable/key_48"
+            android:id="@+id/creds"
+            android:scaleType="center">
         </com.getbase.floatingactionbutton.FloatingActionButton>
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@android:color/holo_blue_bright"
             fab:fab_title="Upload"
-            android:id="@+id/upload">
+            android:src="@drawable/upload_cloud_48"
+            android:id="@+id/upload"
+            android:scaleType="center">
         </com.getbase.floatingactionbutton.FloatingActionButton>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
