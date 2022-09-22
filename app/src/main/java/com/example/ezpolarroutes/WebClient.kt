@@ -56,7 +56,7 @@ class WebClient {
                     }
                 }
                 new_cookie = new_cookie.removePrefix("[")
-                Log.i("toto", new_cookie)
+                //Log.i("tag", new_cookie)
                 true
             }
     }

@@ -33,40 +33,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val credsDialog = CredsDialog(this)
             credsDialog.show()
         }
-
         binding.upload.setOnClickListener {
-            var GPSPointList = mutableListOf<GPSPoint>()
-            var lastPoint:LatLng? = null
-            pointList.forEach{
-                var distance = 0.0
-                if (lastPoint != null){
-                    val results = FloatArray(1)
-                    Location.distanceBetween(
-                        lastPoint?.latitude?:0.0,
-                        lastPoint?.longitude?:0.0,
-                        it.latitude,
-                        it.longitude,
-                        results)
-                    distance = results[0].toDouble()
-                }
-
-                lastPoint = it
-                GPSPointList.add(GPSPoint(it.latitude, it.longitude, 0.0, distance))
-            }
-            var toto = GPSData(GPSPointList, "toto",  totalDisance.toDouble())
-            webClient.upload(toto).subscribe({
-                Log.i("ASDDSADSA","Ca UPLOAD bien !" + it.toString())
-            },
-            {
-                Log.e("ASDSADSAD","ca UPLOAD pas...$it", it)
-            })
+            val uploadDialog = UploadDialog(this)
+            uploadDialog.show()
         }
         webClient.login(AppPreferences(this).username, AppPreferences(this).password)
             .subscribe({
-                Log.i("Tamere","Ca marche bien !" + it.toString())
+                Log.i("tag","Ca marche bien !" + it.toString())
             },
             {
-                Log.e("Tamere","ca marche pas...$it", it)
+                Log.e("tag","ca marche pas...$it", it)
             })
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -128,6 +104,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             computeTotalDistance()
         })
 
+    }
+
+    fun uploadTheCurrentGPSTrace(name:String) {
+        var GPSPointList = mutableListOf<GPSPoint>()
+        var lastPoint:LatLng? = null
+
+        pointList.forEach{
+            var distance = 0.0
+            if (lastPoint != null){
+                val results = FloatArray(1)
+                Location.distanceBetween(
+                    lastPoint?.latitude?:0.0,
+                    lastPoint?.longitude?:0.0,
+                    it.latitude,
+                    it.longitude,
+                    results)
+                distance = results[0].toDouble()
+            }
+            Log.i("toto", GPSPointList.toString())
+            lastPoint = it
+            GPSPointList.add(GPSPoint(it.latitude, it.longitude, 0.0, distance))
+        }
+        var toto = GPSData(GPSPointList, name,  totalDisance.toDouble())
+        webClient.upload(toto).subscribe({
+            Log.i("tag","Ca UPLOAD bien !" + it.toString())
+        },
+            {
+                Log.e("tag","ca UPLOAD pas...$it", it)
+            })
     }
 
     fun computeTotalDistance(){
