@@ -3,6 +3,9 @@ package com.rcorp.polarroute.ui.screen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -48,15 +51,25 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier.f
         if (uploadStatus != null)
             uploadDialogOpenState = false
         GoogleMapView(mapViewModel, modifier = Modifier.fillMaxSize())
-        Text(
-            text = "${((totalDistance?:0.0) / 1000.0).toInt()} km",
-            style = MaterialTheme.typography.titleLarge.copy(Color.White, fontSize = 40.sp),
+        Card(
+            shape = RoundedCornerShape(corner = CornerSize(20.dp)),
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier
                 .align(
                     Alignment.BottomStart
                 )
                 .padding(bottom = 30.dp, start = 30.dp)
-        )
+        ) {
+            Text(
+                text = "${((totalDistance ?: 0.0) / 1000.0).toInt()} km",
+                style = MaterialTheme.typography.titleLarge.copy(Color.Black, fontSize = 25.sp),
+                modifier = Modifier
+                    .align(
+                        Alignment.Center
+                    ).padding(10.dp)
+
+            )
+        }
         SettingsDialog(settingsDialogOpenState) {
             settingsDialogOpenState = false
         }
@@ -88,7 +101,7 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier.f
         ExtendedFloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 70.dp, bottom = 20.dp),
+                .padding(end = 70.dp, bottom = 30.dp),
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_cloud_upload_24),
