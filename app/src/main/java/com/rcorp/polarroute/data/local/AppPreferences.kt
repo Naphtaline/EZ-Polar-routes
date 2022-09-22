@@ -8,13 +8,8 @@ import androidx.security.crypto.MasterKeys
 class AppPreferences constructor(context : Context) {
 
     private val mPreferences: SharedPreferences =
-        EncryptedSharedPreferences.create(
-            "secret_shared_prefs",
-            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-            context,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        );
+        context.getSharedPreferences(
+            "com.rcorp.PolarRoute", Context.MODE_PRIVATE)
 
     private val mPrefsEditor: SharedPreferences.Editor = mPreferences.edit()
 

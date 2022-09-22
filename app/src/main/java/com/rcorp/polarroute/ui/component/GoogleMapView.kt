@@ -36,25 +36,26 @@ fun GoogleMapView(mapViewModel: GoogleMapViewModel, modifier: Modifier = Modifie
         properties = properties,
         uiSettings = uiSettings,
         onMapClick = {
-            mapViewModel.onMapClick(GPSPoint(it))
+            mapViewModel.onMapClick(MarkerState(position = it))
         }
     ) {
-        var lastLatLng: GPSPoint? = null
-        markers?.forEach { latLng ->
+        mapViewModel.computeDistance()
+        var lastLatLng: MarkerState? = null
+        markers?.forEach { markerState ->
             if (lastLatLng != null)
                 Polyline(
                     color = MaterialTheme.colorScheme.inversePrimary,
-                    points = mutableListOf(lastLatLng!!.toLatLng(), latLng.toLatLng())
+                    points = mutableListOf(lastLatLng!!.position, markerState.position)
                 )
             Marker(
-                draggable = false,
-                state = MarkerState(position = latLng.toLatLng()),
+                draggable = true,
+                state = markerState,
                 onClick = {
-                    mapViewModel.onMarkerClick(latLng)
+                    mapViewModel.onMarkerClick(markerState)
                     true
                 }
             )
-            lastLatLng = latLng
+            lastLatLng = markerState
         }
     }
 

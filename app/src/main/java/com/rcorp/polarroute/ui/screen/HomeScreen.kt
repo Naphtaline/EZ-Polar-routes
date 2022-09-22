@@ -6,18 +6,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.rcorp.polarroute.R
 import com.rcorp.polarroute.data.local.AppPreferences
 import com.rcorp.polarroute.model.GPSData
+import com.rcorp.polarroute.model.getTotalDistance
+import com.rcorp.polarroute.model.toGPSPoints
 import com.rcorp.polarroute.ui.component.*
 import com.rcorp.polarroute.viewmodel.GoogleMapViewModel
 import com.rcorp.polarroute.viewmodel.UploadViewModel
@@ -37,19 +42,29 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier.f
     }
     val uploadProcessState by uploadViewModel.progress.observeAsState()
     val uploadStatus by uploadViewModel.status.observeAsState()
-
+    val totalDistance by mapViewModel.totalDistance.observeAsState()
 
     Box(modifier) {
         if (uploadStatus != null)
             uploadDialogOpenState = false
         GoogleMapView(mapViewModel, modifier = Modifier.fillMaxSize())
+        Text(
+            text = "${((totalDistance?:0.0) / 1000.0).toInt()} km",
+            style = MaterialTheme.typography.titleLarge.copy(Color.White, fontSize = 40.sp),
+            modifier = Modifier
+                .align(
+                    Alignment.BottomStart
+                )
+                .padding(bottom = 30.dp, start = 30.dp)
+        )
         SettingsDialog(settingsDialogOpenState) {
             settingsDialogOpenState = false
         }
         UploadDialog(uploadDialogOpenState, uploadProcessState ?: false, {
             uploadDialogOpenState = false
         }) {
-            uploadViewModel.uploadData(GPSData(mapViewModel.markers.value ?: listOf(), it, 0.0))
+            val gpsPoints = mapViewModel.markers.value?.toGPSPoints() ?: listOf()
+            uploadViewModel.uploadData(GPSData(gpsPoints, it, gpsPoints.getTotalDistance()))
         }
         ErrorDialog(openState = uploadStatus == UploadViewModel.Status.FAIL) {
             uploadViewModel.status.value = null
