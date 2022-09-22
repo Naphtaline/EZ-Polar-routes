@@ -25,11 +25,11 @@ fun SettingsDialog(openState: Boolean, onDismissRequest: () -> Unit) {
     val appPreferences = get<AppPreferences>(AppPreferences::class.java)
 
     var email by remember {
-        mutableStateOf("")
+        mutableStateOf(appPreferences.username ?: "")
     }
 
     var password by remember {
-        mutableStateOf("")
+        mutableStateOf(appPreferences.password ?: "")
     }
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
