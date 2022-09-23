@@ -20,6 +20,7 @@ fun GoogleMapView(mapViewModel: GoogleMapViewModel, modifier: Modifier = Modifie
 
 
     val startPos = LatLng(50.522362465744365, 8.401691494731605)
+
     val uiSettings by remember { mutableStateOf(MapUiSettings()) }
     val properties by remember {
         mutableStateOf(MapProperties(mapType = MapType.HYBRID))
@@ -27,6 +28,7 @@ fun GoogleMapView(mapViewModel: GoogleMapViewModel, modifier: Modifier = Modifie
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(startPos, 6f)
     }
+
     val markers by mapViewModel.markers.observeAsState()
 
 

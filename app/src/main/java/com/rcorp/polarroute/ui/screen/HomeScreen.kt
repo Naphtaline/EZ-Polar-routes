@@ -34,9 +34,17 @@ import org.koin.java.KoinJavaComponent
 @Composable
 fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier.fillMaxSize()) {
 
+    /**
+     * VIEWMODEL
+     */
     val mapViewModel: GoogleMapViewModel = viewModel()
     val uploadViewModel: UploadViewModel = viewModel()
+
     val appPreferences = KoinJavaComponent.get<AppPreferences>(AppPreferences::class.java)
+
+    /**
+     * DIALOG STATE
+     */
     var settingsDialogOpenState by remember {
         mutableStateOf(appPreferences.token.isNullOrEmpty())
     }
@@ -50,7 +58,14 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier.f
     Box(modifier) {
         if (uploadStatus != null)
             uploadDialogOpenState = false
+
+        /**
+         * GOOGLE MAP View
+         */
         GoogleMapView(mapViewModel, modifier = Modifier.fillMaxSize())
+        /**
+         * The card display in bottom with the distance
+         */
         Card(
             shape = RoundedCornerShape(corner = CornerSize(20.dp)),
             backgroundColor = MaterialTheme.colorScheme.primaryContainer,
@@ -70,6 +85,9 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier.f
 
             )
         }
+        /**
+         * All the home screen dialog. Displayed when boolean are true
+         */
         SettingsDialog(settingsDialogOpenState) {
             settingsDialogOpenState = false
         }
@@ -85,6 +103,10 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier.f
         SuccessDialog(openState = uploadStatus == UploadViewModel.Status.SUCCESS) {
             uploadViewModel.status.value = null
         }
+
+        /**
+         * The two FAB Button on the home screen
+         */
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
